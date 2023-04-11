@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
+
 
 public class PlayerCtrl : MonoBehaviour
 {
     public Vector2 playerPos, mousePos, movePos;
     float dis;
     float angle;
+    bool action = true;
+    List<Vector2> posList = new List<Vector2>();
+    Vector2 beforePos;
     GameObject arrow, bullet;
-    public float speed, disVal, maxArrow;
+    public float speed, disVal, maxArrowX, maxArrowY;
 
     void Start()
     {
@@ -22,6 +23,25 @@ public class PlayerCtrl : MonoBehaviour
         playerPos = transform.position;
         mousePos = Input.mousePosition;
         mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        angle = Mathf.Atan2(mousePos.y - playerPos.y, mousePos.x - playerPos.x);
+        dis = Vector2.Distance(playerPos, mousePos);
+
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            StartCoroutine(TimeReversal());
+            
+        }
+        if (action == true)
+        {
+            playerMove();
+            fireBullet();
+        }
+
+
+    }
+    void playerMove()
+    {
         if (Input.GetMouseButtonDown(1))
         {
             Time.timeScale = 0.25f;
@@ -30,30 +50,39 @@ public class PlayerCtrl : MonoBehaviour
         }
         if (Input.GetMouseButton(1))
         {
-            dis = Vector2.Distance(playerPos, mousePos);
             if (dis > disVal)
                 dis = disVal;
-            arrow.transform.localScale = new Vector2(0.4f, dis * (maxArrow / disVal));
-            angle = Mathf.Atan2(mousePos.y - playerPos.y, mousePos.x - playerPos.x);
-            arrow.transform.position = new Vector2(playerPos.x + 2* (arrow.transform.localScale.y * Mathf.Cos(angle)), playerPos.y + 2 * (arrow.transform.localScale.y * Mathf.Sin(angle)));
+            arrow.transform.localScale = new Vector2(0.05f + dis * (maxArrowX / disVal), 0.1f+ dis * (maxArrowY / disVal));
+            arrow.transform.position = new Vector2(playerPos.x + 2 * (arrow.transform.localScale.y * Mathf.Cos(angle)), playerPos.y + 2 * (arrow.transform.localScale.y * Mathf.Sin(angle)));
             arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
         }
         if (Input.GetMouseButtonUp(1))
         {
             movePos = new Vector2(mousePos.x, mousePos.y);
-            dis = Vector2.Distance(playerPos, movePos);
             arrow.SetActive(false);
             if (dis > disVal)
             {
-                angle = Mathf.Atan2(movePos.y - playerPos.y, movePos.x - playerPos.x);
                 movePos.x = playerPos.x + disVal * Mathf.Cos(angle);
                 movePos.y = playerPos.y + disVal * Mathf.Sin(angle);
+            }
+            if (posList.Count < 5)
+                posList.Add(playerPos);
+            else if (posList.Count >= 5)
+            {
+                posList.Remove(posList[0]);
+                posList.Add(playerPos);
             }
             Time.timeScale = 1;
         }
         transform.position = Vector2.Lerp(playerPos, movePos, speed * Time.deltaTime);
 
-
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    speed = 100000000f;
+        //}
+    }
+    void fireBullet()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             bullet = GameManager.Instance.poolManager.Get(1);
@@ -62,10 +91,20 @@ public class PlayerCtrl : MonoBehaviour
             bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
 
         }
-        //if (Input.GetKeyDown(KeyCode.LeftShift))
-        //{
-        //    speed = 100000000f;
-        //}
     }
 
+    IEnumerator TimeReversal()
+    {
+        action = false;
+        for (int i = posList.Count - 1; i >= 0; i--)
+        {
+            print(posList[i]);
+            print(playerPos);
+            transform.position = posList[i];
+            yield return new WaitForSeconds(0.5f);
+        }
+        movePos = playerPos;
+        action = true;
+        posList.Clear();
+    }
 }
