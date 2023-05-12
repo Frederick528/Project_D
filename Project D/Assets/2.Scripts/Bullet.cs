@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float bulletSpeed; 
+    public float bulletSpeed;
+    public GameObject effect;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +18,11 @@ public class Bullet : MonoBehaviour
         {
             transform.Translate(Vector2.up * bulletSpeed * Time.deltaTime);
         }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        gameObject.SetActive(false);
+        Instantiate(effect, collision.contacts[0].point, Quaternion.identity);
     }
 
 }

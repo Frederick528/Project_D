@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4180016462187635567}
   - component: {fileID: 3963988595429447059}
   - component: {fileID: -7359191252903003056}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -76,7 +76,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a553ce1141d788d4f9a4614830943a0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effect: {fileID: 100000, guid: f06e78284f831ae469c74624ab5d513b, type: 3}
   bulletSpeed: 15
 --- !u!70 &3963988595429447059
 CapsuleCollider2D:
@@ -131,7 +133,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1

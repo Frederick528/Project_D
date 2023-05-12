@@ -6,9 +6,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public PoolManager poolManager;
+    public PlayerCtrl playerCtrl;
     // Start is called before the first frame update
     void Awake()
     {
+        if (Instance != null)
+            return;
+
         Instance = this;
     }
 
