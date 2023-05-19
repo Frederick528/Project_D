@@ -136,7 +136,9 @@ public class UIScript : MonoBehaviour
 
 	public void SetHealth(int amount, int playerNumber)
 	{
-		playersHealth[playerNumber] = amount;
+        if (playerNumber != 0)
+            return;
+        playersHealth[playerNumber] = amount;
 		numberLabels[playerNumber].text = (playersHealth[playerNumber]+"/"+ GameManager.Instance.playerCtrl.maxHealth).ToString();
 	}
 

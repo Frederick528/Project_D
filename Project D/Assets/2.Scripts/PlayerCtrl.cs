@@ -60,7 +60,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            Time.timeScale = 0.25f;
+            Time.timeScale = 0.125f;
             arrow = GameManager.Instance.poolManager.Get(0);
 
         }
@@ -154,7 +154,6 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Object"))
         {
-            print("Ãæµ¹");
             playerMovePos = -playerMovePos;
             if (angle > 0)
             {

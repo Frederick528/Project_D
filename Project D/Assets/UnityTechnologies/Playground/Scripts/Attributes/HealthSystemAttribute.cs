@@ -5,7 +5,7 @@ using UnityEngine.UI;
 [AddComponentMenu("Playground/Attributes/Health System")]
 public class HealthSystemAttribute : MonoBehaviour
 {
-    public int health = 100;
+    public int health;
 
     private UIScript ui;
     private int maxHealth;
