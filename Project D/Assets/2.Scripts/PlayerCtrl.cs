@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    public int hp;
-    public Slider hpBar;
+    public int maxHealth;
     public List<GameObject> effect;
     public Vector2 playerPos, mousePos, movePos, playerMovePos;
     float dis;
@@ -36,7 +35,7 @@ public class PlayerCtrl : MonoBehaviour
         dis = Vector2.Distance(playerPos, mousePos);
         if (dis > disVal)
             dis = disVal;
-        //Time.fixedDeltaTime = 0.02F * Time.timeScale;
+        Time.fixedDeltaTime = 0.02F * Time.timeScale;
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             rb2.velocity = Vector2.zero;
@@ -49,13 +48,13 @@ public class PlayerCtrl : MonoBehaviour
             playerMove();
             fireBullet();
         }
-        HPBar();
+        //HPBar();
     }
 
-    void HPBar()
-    {
-        hpBar.value = hp / 100f;
-    }
+    //void HPBar()
+    //{
+    //    hpBar.value = hp / 100f;
+    //}
 
     void playerMove()
     {
@@ -67,7 +66,7 @@ public class PlayerCtrl : MonoBehaviour
         }
         if (Input.GetMouseButton(1))
         {
-            arrow.transform.localScale = new Vector2(0.05f + dis * (maxArrowX / disVal), 0.1f+ dis * (maxArrowY / disVal));
+            arrow.transform.localScale = new Vector2(0.05f + dis * (maxArrowX / disVal), 0.1f + dis * (maxArrowY / disVal));
             arrow.transform.position = new Vector2(playerPos.x + 2 * (arrow.transform.localScale.y * Mathf.Cos(angle)), playerPos.y + 2 * (arrow.transform.localScale.y * Mathf.Sin(angle)));
             arrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
         }
@@ -105,13 +104,13 @@ public class PlayerCtrl : MonoBehaviour
     private IEnumerator MoveCor()
     {
         originSpeed = speed * dis;
-        while(originSpeed > 0)
+        while (originSpeed > 0)
         {
-            
+
             transform.Translate(playerMovePos * originSpeed * Time.deltaTime);
             originSpeed -= originSpeed * Time.deltaTime;
             yield return null;
-            
+
         }
         moveCor = null;
 
@@ -143,7 +142,7 @@ public class PlayerCtrl : MonoBehaviour
             transform.position = posList[i];
             Instantiate(effect[1], transform.position, Quaternion.identity);
 
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.2f);
         }
         movePos = playerPos;
         ParticleSystem endTimeReversal = Instantiate(effect[0], transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
@@ -180,7 +179,7 @@ public class PlayerCtrl : MonoBehaviour
                 else if (bounceAngle < Mathf.PI / 2 || bounceAngle > 0)
                     bounceAngle = Mathf.PI / 2 + bounceAngle;
                 else if (bounceAngle > -(Mathf.PI / 2) || bounceAngle < 0)
-                    bounceAngle = -(Mathf .PI / 2) + bounceAngle;
+                    bounceAngle = -(Mathf.PI / 2) + bounceAngle;
                 else if (bounceAngle < -(Mathf.PI / 2))
                     bounceAngle = Mathf.PI + bounceAngle;
             }

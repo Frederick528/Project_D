@@ -105,11 +105,13 @@ public class UIScript : MonoBehaviour
 
 	public void GameWon(int playerNumber)
 	{
+		if (playerNumber != 0)
+			return;
 		// only set game over UI if game is not over
 	    if (!gameOver)
 	    {
 			gameOver = true;
-			winLabel.text = "Player " + ++playerNumber + " wins!";
+			winLabel.text = /*"Player " + ++playerNumber + */"wins!";
 			statsPanel.SetActive(false);
 			winPanel.SetActive(true);
 		}
@@ -119,6 +121,8 @@ public class UIScript : MonoBehaviour
 
 	public void GameOver(int playerNumber)
 	{
+		if (playerNumber != 0)
+			return;
         // only set game over UI if game is not over
 	    if (!gameOver)
 	    {
@@ -133,7 +137,7 @@ public class UIScript : MonoBehaviour
 	public void SetHealth(int amount, int playerNumber)
 	{
 		playersHealth[playerNumber] = amount;
-		numberLabels[playerNumber].text = playersHealth[playerNumber].ToString();
+		numberLabels[playerNumber].text = (playersHealth[playerNumber]+"/"+ GameManager.Instance.playerCtrl.maxHealth).ToString();
 	}
 
 

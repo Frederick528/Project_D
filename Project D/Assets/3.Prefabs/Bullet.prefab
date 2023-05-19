@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4180016462187635567}
   - component: {fileID: 3963988595429447059}
   - component: {fileID: -7359191252903003056}
+  - component: {fileID: 717122611589566120}
   m_Layer: 7
   m_Name: Bullet
   m_TagString: Bullet
@@ -100,8 +101,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a553ce1141d788d4f9a4614830943a0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effect: {fileID: 100000, guid: f06e78284f831ae469c74624ab5d513b, type: 3}
   bulletSpeed: 15
+  effect: {fileID: 100000, guid: f06e78284f831ae469c74624ab5d513b, type: 3}
 --- !u!70 &3963988595429447059
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -139,3 +140,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &717122611589566120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513877971533977598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fa3c260db47248a18ecb8112019040d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyWhenActivated: 0
+  healthChange: -1
