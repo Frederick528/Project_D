@@ -11,6 +11,8 @@ TagManager:
   - Pickup
   - EndZone
   - Object
+  - FxTemporaire
+  - Effect
   layers:
   - Default
   - TransparentFX
@@ -20,8 +22,8 @@ TagManager:
   - UI
   - Player
   - Bullet
-  - 
-  - 
+  - Enemy
+  - EnemyBullet
   - 
   - 
   - 

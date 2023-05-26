@@ -6,15 +6,15 @@ using UnityEngine.UI;
 
 public class PlayerCtrl : MonoBehaviour
 {
+    bool bulletCooldown, timeReversalCooldown;
     public int maxHealth;
     public List<GameObject> effect;
-    public Vector2 playerPos, mousePos, movePos, playerMovePos;
+    public Vector2 playerPos, mousePos, /*movePos,*/ playerMovePos;
     float dis;
     float bounceAngle;
     public float angle;
     bool action = true;
     List<Vector2> posList = new List<Vector2>();
-    Vector2 beforePos;
     GameObject arrow, bullet;
     public float originSpeed;
     private Coroutine moveCor;
@@ -38,15 +38,19 @@ public class PlayerCtrl : MonoBehaviour
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            rb2.velocity = Vector2.zero;
-            originSpeed = 0;
-            StartCoroutine(TimeReversal());
+            if (timeReversalCooldown == false)
+            {
+                rb2.velocity = Vector2.zero;
+                originSpeed = 0;
+                StartCoroutine(TimeReversal());
+            }
 
         }
         if (action == true)
         {
             playerMove();
-            fireBullet();
+            if (bulletCooldown == false)
+                fireBullet();
         }
         //HPBar();
     }
@@ -74,8 +78,8 @@ public class PlayerCtrl : MonoBehaviour
         {
             bounceAngle = angle;
             arrow.SetActive(false);
-            movePos.x = playerPos.x + dis * Mathf.Cos(angle);
-            movePos.y = playerPos.y + dis * Mathf.Sin(angle);
+            //movePos.x = playerPos.x + dis * Mathf.Cos(angle);
+            //movePos.y = playerPos.y + dis * Mathf.Sin(angle);
             if (posList.Count < 5)
                 posList.Add(playerPos);
             else if (posList.Count >= 5)
@@ -123,13 +127,21 @@ public class PlayerCtrl : MonoBehaviour
             bullet = GameManager.Instance.poolManager.Get(1);
             bullet.transform.position = playerPos;
             bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
+            bulletCooldown = true;
+            StartCoroutine("BulletCooldown");
 
         }
+    }
+    IEnumerator BulletCooldown()
+    {
+        yield return new WaitForSeconds(0.3f);
+        bulletCooldown = false;
     }
 
     IEnumerator TimeReversal()
     {
-        //yield return new WaitForSeconds(0f);
+        gameObject.GetComponent<CircleCollider2D>().enabled = false;
+        timeReversalCooldown = true;
         action = false;
         arrow.SetActive(false);
         Time.timeScale = 1;
@@ -144,23 +156,27 @@ public class PlayerCtrl : MonoBehaviour
 
             yield return new WaitForSeconds(0.2f);
         }
-        movePos = playerPos;
+        //movePos = playerPos;
         ParticleSystem endTimeReversal = Instantiate(effect[0], transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         endTimeReversal.gameObject.transform.localScale = Vector3.one * 3;
-        action = true;
         posList.Clear();
+        yield return new WaitForSeconds(1.5f);
+        gameObject.GetComponent<CircleCollider2D>().enabled = true;
+        action = true;
+        yield return new WaitForSeconds(3f);
+        timeReversalCooldown = false;
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Object"))
         {
             playerMovePos = -playerMovePos;
-            if (angle > 0)
+            if (angle > 0) //플레이어 기준 제1사분면 제2사분면일 경우
             {
-                bounceAngle = angle - Mathf.PI;
+                bounceAngle = angle - Mathf.PI; //바운스앵글 조정 이유: 오브젝트와 충둘하여 튕겨져나간 후 그라운드와 충돌 시 플레이어가 튕겨져 나갈 각도를 정해줘야 하기 때문
 
             }
-            if (angle < 0)
+            if (angle < 0) //플레이어 기준 제3사분면 제4사분면일 경우
             {
                 bounceAngle = angle + Mathf.PI;
 
