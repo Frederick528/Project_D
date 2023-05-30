@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-[AddComponentMenu("Playground/Movement/Follow Target")]
+[AddComponentMenu("Playground/Enemy")]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : Physics2DObject
 {
@@ -13,6 +13,8 @@ public class Enemy : Physics2DObject
 	[Header("Movement")]
 	// Speed used to move towards the target
 	public float speed;
+	float originSpeed = 2;
+	float slowSpeed = 1;
 
 	// Used to decide if the object will look at the target while pursuing it
 	public bool lookAtTarget = false;
@@ -21,6 +23,7 @@ public class Enemy : Physics2DObject
 	public Enums.Directions useSide = Enums.Directions.Up;
     void Start()
     {
+		speed = originSpeed;
 		StartCoroutine(EnemyBulletCooldown());
     }
 
@@ -72,4 +75,20 @@ public class Enemy : Physics2DObject
         yield return new WaitForSeconds(2f);
         StartCoroutine(EnemyBulletCooldown());
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Object"))
+        {
+			speed = slowSpeed;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+		if (collision.transform.CompareTag("Object"))
+		{
+			speed = originSpeed;
+		}
+	}
 }
