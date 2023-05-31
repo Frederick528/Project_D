@@ -1866,7 +1866,7 @@ GameObject:
   - component: {fileID: 1366338776}
   - component: {fileID: 1366338777}
   m_Layer: 0
-  m_Name: BossHand (1)
+  m_Name: BossHandLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2104,7 +2104,7 @@ GameObject:
   - component: {fileID: 1370714625}
   - component: {fileID: 1370714626}
   m_Layer: 0
-  m_Name: BossHand
+  m_Name: BossHandRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3101,7 +3101,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683164450}
   m_LocalRotation: {x: -3.6615568e-11, y: -0.00000004007964, z: -1.4675389e-18, w: 1}
-  m_LocalPosition: {x: -1.4329453, y: -5.19999, z: -9.999999}
+  m_LocalPosition: {x: -1.5930567, y: -5.19999, z: -9.999999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

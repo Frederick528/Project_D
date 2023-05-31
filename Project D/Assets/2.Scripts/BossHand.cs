@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BossHand : MonoBehaviour
 {
-    public static bool lookAtTarget = true;
+    //public static bool lookAtTarget = true;
     public GameObject target;
     public Enums.Directions useSide = Enums.Directions.Down;
     // Start is called before the first frame update
@@ -16,7 +16,7 @@ public class BossHand : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (lookAtTarget)
-            Utils.SetAxisTowards(useSide, transform, target.transform.position - transform.position);
+        //if (lookAtTarget)
+        Utils.SetAxisTowards(useSide, transform, target.transform.position - transform.position);
     }
 }
