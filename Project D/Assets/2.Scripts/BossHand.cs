@@ -16,7 +16,7 @@ public class BossHand : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (lookAtTarget)
+        // 손이 타겟(플레이어)을 바라봄
         Utils.SetAxisTowards(useSide, transform, target.transform.position - transform.position);
     }
 }

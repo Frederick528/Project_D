@@ -21,6 +21,7 @@ public class Bullet : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // 오브젝트와 충돌이 충돌할 경우, 총알 제거와 함께 타격 이펙트 소환
         gameObject.SetActive(false);
         Instantiate(effect, collision.contacts[0].point, Quaternion.identity);
     }

@@ -18,6 +18,7 @@ public class Effect : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        // Bullet 태그를 가진 오브젝트는 이펙트와 충돌할 경우 사라짐(특수 능력(shift))
         if (collision.gameObject.CompareTag("Bullet"))
             collision.gameObject.SetActive(false);
     }
