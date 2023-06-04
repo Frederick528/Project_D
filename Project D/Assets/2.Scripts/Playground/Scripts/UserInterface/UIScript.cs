@@ -27,7 +27,7 @@ public class UIScript : MonoBehaviour
 
 	// Internal variables to keep track of score, health, and resources, win state
 	private int[] scores = new int[2];
-	private int[] playersHealth = new int[2];
+	public static int[] playersHealth = new int[2];
 	private Dictionary<int, ResourceStruct> resourcesDict = new Dictionary<int, ResourceStruct>(); //holds a reference to all the resources collected, and to their UI
     private bool gameOver = false; //this gets changed when the game is won OR lost
 
@@ -139,14 +139,15 @@ public class UIScript : MonoBehaviour
         if (playerNumber != 0)
             return;
         playersHealth[playerNumber] = amount;
-		numberLabels[playerNumber].text = (playersHealth[playerNumber]+"/"+ GameManager.Instance.playerCtrl.maxHealth).ToString();
+		numberLabels[playerNumber].text = (playersHealth[playerNumber] + "/"+ PlayerCtrl.maxHealth).ToString();
 	}
 
 
 
 	public void ChangeHealth(int change, int playerNumber)
 	{
-		SetHealth(playersHealth[playerNumber] + change, playerNumber);
+
+        SetHealth(playersHealth[playerNumber] + change, playerNumber);
 
 		if(gameType != GameType.Endless
 			&& playersHealth[playerNumber] <= 0)

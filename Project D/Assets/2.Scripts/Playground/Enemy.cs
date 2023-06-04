@@ -39,7 +39,10 @@ public class Enemy : Physics2DObject
 	{
 		//do nothing if the target hasn't been assigned or it was detroyed for some reason
 		if (target == null)
+		{
+			StopAllCoroutines();
 			return;
+		}
 
 		if (isSearch == true)
 		{

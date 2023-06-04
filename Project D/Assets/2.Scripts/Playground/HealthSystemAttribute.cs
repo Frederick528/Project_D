@@ -5,10 +5,9 @@ using UnityEngine.UI;
 [AddComponentMenu("Playground/Attributes/Health System")]
 public class HealthSystemAttribute : MonoBehaviour
 {
-    public int health;
+    // public static int health = PlayerCtrl.maxHealth;
 
     private UIScript ui;
-    private int maxHealth;
     public Slider hpBar;
     // Will be set to 0 or 1 depending on how the GameObject is tagged
     // it's -1 if the object is not a player
@@ -42,10 +41,10 @@ public class HealthSystemAttribute : MonoBehaviour
         if (ui != null
             && playerNumber != -1)
         {
-            ui.SetHealth(health, playerNumber);
+            ui.SetHealth(PlayerCtrl.health, playerNumber);
         }
 
-        maxHealth = health; //note down the maximum health to avoid going over it when the player gets healed
+        //maxHealth = health; //note down the maximum health to avoid going over it when the player gets healed
     }
     void Update()
     {
@@ -56,25 +55,20 @@ public class HealthSystemAttribute : MonoBehaviour
     {
         if (playerNumber != 0)
             return;
-        hpBar.value = (float)health / maxHealth;
+        hpBar.value = (float)PlayerCtrl.health / PlayerCtrl.maxHealth;
     }
 
-    //  void OnCollisionEnter2D(Collision2D collision)
-    //  {
-    //if (collision.gameObject.CompareTag("Player"))
-    //	health -= 1;
-    //  }
     // changes the energy from the player
     // also notifies the UI (if present)
     public void ModifyHealth(int amount)
     {
         //avoid going over the maximum health by forcin
-        if (health + amount > maxHealth)
+        if (PlayerCtrl.health + amount > PlayerCtrl.maxHealth)
         {
-            amount = maxHealth - health;
+            amount = PlayerCtrl.maxHealth - PlayerCtrl.health;
         }
 
-        health += amount;
+        PlayerCtrl.health += amount;
 
         // Notify the UI so it will change the number in the corner
         if (ui != null
@@ -83,11 +77,12 @@ public class HealthSystemAttribute : MonoBehaviour
             ui.ChangeHealth(amount, playerNumber);
         }
 
+        // 주석한 이유: 다른 오브젝트 제거 스크립트도 같이 사용하기 때문에 오류가 생김.
         //DEAD
-        if (health <= 0)
-        {
-            Destroy(gameObject);
-        }
+        //if (PlayerCtrl.health <= 0)
+        //{
+        //    Destroy(gameObject);
+        //}
     }
 
 }

@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class PlayerCtrl : MonoBehaviour
 {
     bool bulletCooldown, timeReversalCooldown;
-    public int maxHealth;
+    public static int maxHealth = 5;
+    public static int health = maxHealth;
     public List<GameObject> effect;
     public Vector2 playerPos, mousePos, playerMovePos;
     float dis;
@@ -273,5 +274,12 @@ public class PlayerCtrl : MonoBehaviour
                     bounceAngle = -bounceAngle;
             }
         }
+    }
+
+    void OnDestroy()
+    {
+        if (arrow != null)
+            arrow.SetActive(false);
+        Time.timeScale = 1;
     }
 }

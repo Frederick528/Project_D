@@ -6,10 +6,8 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider2D))]
 public class ConditionCollision : ConditionBase
 {
-    HealthSystemAttribute hS;
     private void Start()
     {
-        hS = GameObject.FindWithTag("Player").GetComponent<HealthSystemAttribute>() as HealthSystemAttribute;
     }
 
     //This will create a dialog window asking for which dialog to add
@@ -18,21 +16,31 @@ public class ConditionCollision : ConditionBase
         Utils.Collider2DDialogWindow(this.gameObject, false);
     }
 
-    // This function will be called when something touches the trigger collider
-    void OnCollisionEnter2D(Collision2D collision)
+
+    private void Update()
     {
-
-        if (collision.collider.CompareTag(filterTag)|| !filterByTag && hS.health == 1)
+        if (PlayerCtrl.health <= 0)
         {
-            ExecuteAllActions(collision.gameObject);
+            ExecuteAllActions(gameObject);
         }
-
     }
-
-    //private void Update()
+    // This function will be called when something touches the trigger collider
+    //void OnCollisionEnter2D(Collision2D collision)
     //{
-    // if (hS.health == 0)
-    //        ExecuteAllActions(this.gameObject);
+
+    //    if (/*collision.collider.CompareTag(filterTag)|| !filterByTag && */PlayerCtrl.health <= 0)
+    //    {
+    //        ExecuteAllActions(collision.gameObject);
+    //    }
 
     //}
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (PlayerCtrl.health <= 0)
+    //    {
+    //        ExecuteAllActions(collision.gameObject);
+    //    }
+    //}
+
 }

@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
-    bool isLaser, isSpawn, isSwing, isShoot, isBurst = false;
-    bool rightUp, rightDown, leftUp, leftDown = false;
-    bool rightHandBack, leftHandBack;
+    bool isLaser, isSwing, isShoot, isBurst, isSpawn = false;
+    bool rightUp, rightDown, leftUp, leftDown, rightHandMove, leftHandMove = false;
+    bool rightHandBack, leftHandBack = false;
+    GameObject enemyBullet;
     public GameObject target;
     public GameObject[] hands;
     public GameObject[] laser;
@@ -23,9 +24,9 @@ public class Boss : MonoBehaviour
     {
         Laser,
         SPAWN,
-        SWING,
         SHOOT,
-        BURST
+        BURST,
+        SWING
     } 
     // Start is called before the first frame update
     void Start()
@@ -42,8 +43,15 @@ public class Boss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (target == null)
+        {
+            StopAllCoroutines();
+            return;
+        }
         HandBack();
         IsLaser();
+        IsSwing();
+        IsShoot();
     }
 
     IEnumerator BossPattern()
@@ -55,16 +63,16 @@ public class Boss : MonoBehaviour
                 StartCoroutine(LaserPattern());
                 break;
             case 2:
-                StartCoroutine(SpawnPattern());
-                break;
-            case 3:
                 StartCoroutine(SwingPattern());
                 break;
-            case 4:
+            case 3:
                 StartCoroutine(ShootPattern());
                 break;
-            case 5:
+            case 4:
                 StartCoroutine(BurstPattern());
+                break;
+            case 5:
+                StartCoroutine(SpawnPattern());
                 break;
 
         }
@@ -72,15 +80,17 @@ public class Boss : MonoBehaviour
 
     IEnumerator NextPattern()
     {
-        yield return new WaitForSeconds(2f);
         beforePattern = nextPattern;
-        nextPattern = Random.Range(1, 2);
+        nextPattern = Random.Range(3, 4);
         if (beforePattern != nextPattern)
         {
             StartCoroutine(NextPattern());
         }
         else
+        {
+            yield return new WaitForSeconds(2f);
             StartCoroutine(BossPattern());
+        }
     }
     IEnumerator LaserPattern()
     {
@@ -159,22 +169,96 @@ public class Boss : MonoBehaviour
         isLaser = false;
         StartCoroutine(NextPattern());
     }
-    IEnumerator SpawnPattern()
-    {
-        yield return null;
-        StartCoroutine(NextPattern());
-    }
     IEnumerator SwingPattern()
     {
-        yield return null;
+        isSwing = true; rightHandMove = true; leftHandMove = true;
+        yield return new WaitForSeconds(2f);
+        rightHandMove = false; leftHandMove = false;
+        leftLook.enabled = false; rightLook.enabled=false;
+        hands[0].transform.eulerAngles = new Vector3(0, 0, -90);
+        hands[1].transform.eulerAngles = new Vector3(0, 0, 90);
+
+        hands[0].transform.position = 
+            new Vector2(
+                hands[0].transform.position.x, 
+                target.transform.position.y
+                );
+        laser[2].SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        laser[2].SetActive(false);
+        rightUp = true;
+        yield return new WaitForSeconds(1.5f);
+        rightUp = false;
+        hands[0].transform.position = new Vector2(18, -1);
+
+        hands[1].transform.position =
+           new Vector2(
+               hands[1].transform.position.x,
+               target.transform.position.y
+               );
+        laser[3].SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        laser[3].SetActive(false);
+        leftUp = true;
+        yield return new WaitForSeconds(1.5f);
+        leftUp = false;
+        hands[1].transform.position = new Vector2(-18, -1);
+
+
+        // 반복
+        hands[0].transform.position = 
+            new Vector2(
+                hands[0].transform.position.x, 
+                target.transform.position.y
+                );
+        laser[2].SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        laser[2].SetActive(false);
+        rightUp = true;
+        yield return new WaitForSeconds(1.5f);
+        rightUp = false;
+        hands[0].transform.position = new Vector2(18, -1);
+
+        hands[1].transform.position =
+           new Vector2(
+               hands[1].transform.position.x,
+               target.transform.position.y
+               );
+        laser[3].SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        laser[3].SetActive(false);
+        leftUp = true;
+        yield return new WaitForSeconds(1.5f);
+        leftUp = false;
+        hands[1].transform.position = new Vector2(-18, -1);
+
+        rightLook.enabled = true; leftLook.enabled = true;
+        rightHandBack = true; leftHandBack = true;
+        yield return new WaitForSeconds(1f);
+        rightHandBack = false; leftHandBack = false;
+        isSwing = false;
+
         StartCoroutine(NextPattern());
     }
     IEnumerator ShootPattern()
     {
-        yield return null;
+        isShoot = true; rightUp = true;
+        yield return new WaitForSeconds(1f);
+        rightUp = false; leftUp = true;
+        yield return new WaitForSeconds(1f);
+        leftUp = false;
+        yield return new WaitForSeconds(1f);
+        rightUp = true; leftUp = true;
+        yield return new WaitForSeconds(1f);
+        rightUp = false; leftUp = false;
         StartCoroutine(NextPattern());
     }
     IEnumerator BurstPattern()
+    {
+        yield return null;
+        StartCoroutine(NextPattern());
+    }
+    IEnumerator SpawnPattern()
     {
         yield return null;
         StartCoroutine(NextPattern());
@@ -242,6 +326,71 @@ public class Boss : MonoBehaviour
                     );
         }
     }
+
+    void IsSwing()
+    {
+        if (isSwing && rightHandMove)
+        {
+            hands[0].transform.position =
+                Vector2.Lerp(
+                    hands[0].transform.position,
+                    new Vector2(18, -1),
+                    Time.deltaTime
+                    );
+        }
+
+        if (isSwing && leftHandMove)
+        { 
+            hands[1].transform.position =
+                Vector2.Lerp(
+                    hands[1].transform.position,
+                    new Vector2(-18, -1),
+                    Time.deltaTime
+                    );
+        }
+
+        if (isSwing && rightUp)
+        {
+            hands[0].transform.position = 
+                Vector2.MoveTowards(
+                    hands[0].transform.position, 
+                    new Vector2(
+                        hands[0].transform.position.x-30, 
+                        hands[0].transform.position.y),
+                    Time.deltaTime * 30);
+        }
+
+        if (isSwing && leftUp)
+        {
+            hands[1].transform.position =
+                Vector2.MoveTowards(
+                    hands[1].transform.position,
+                    new Vector2(
+                        hands[1].transform.position.x + 30,
+                        hands[1].transform.position.y),
+                    Time.deltaTime * 30);
+        }
+    }
+
+    void IsShoot()
+    {
+        if (isShoot && rightUp)
+        {
+            enemyBullet = GameManager.Instance.poolManager.Get(2);
+            enemyBullet.transform.position = hands[0].transform.position;
+            enemyBullet.transform.eulerAngles = new Vector3(0,0,180+hands[0].transform.rotation.eulerAngles.z);
+
+        }
+
+        if (isShoot && leftUp)
+        {
+            enemyBullet = GameManager.Instance.poolManager.Get(2);
+            enemyBullet.transform.position = hands[1].transform.position;
+            enemyBullet.transform.eulerAngles = new Vector3(0, 0, -180 + hands[1].transform.rotation.eulerAngles.z);
+
+        }
+    }
+
     void HandBack()
     {
         // 보스 손이 원래 위치로 이동하는 코드들

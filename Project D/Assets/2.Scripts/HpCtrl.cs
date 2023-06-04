@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class HpCtrl : MonoBehaviour
 {
-    public int health;
-    private int maxHealth;
+    int health;
+    public int maxHealth;
     public Slider hpBar;
     // Start is called before the first frame update
     void Start()
     {
-        maxHealth = health;
+        health = maxHealth;
     }
 
     // Update is called once per frame
@@ -24,8 +24,8 @@ public class HpCtrl : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Bullet"))
-        {
             health -= 1;
-        }
+        if (collision.gameObject.CompareTag("Effect"))
+            health -= 1;
     }
 }

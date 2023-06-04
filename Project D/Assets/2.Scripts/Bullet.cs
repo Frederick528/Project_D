@@ -25,6 +25,6 @@ public class Bullet : MonoBehaviour
         gameObject.SetActive(false);
         Instantiate(effect, collision.contacts[0].point, Quaternion.identity);
     }
-    
+
 
 }

@@ -32,7 +32,7 @@ public class DestroyAction : Action
 		}
 		else
 		{
-			Destroy(gameObject);
+            Destroy(gameObject);
 		}
 
 		return true; //always returns true
