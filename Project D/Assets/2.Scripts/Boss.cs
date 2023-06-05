@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class Boss : MonoBehaviour
 {
     bool isLaser, isSwing, isShoot, isBurst, isSpawn = false;
-    bool rightUp, rightDown, leftUp, leftDown, rightHandMove, leftHandMove = false;
+    bool right, left, rightUp, rightDown, leftUp, leftDown, rightHandMove, leftHandMove = false;
     bool rightHandBack, leftHandBack = false;
     GameObject enemyBullet;
     public GameObject target;
@@ -52,6 +53,7 @@ public class Boss : MonoBehaviour
         IsLaser();
         IsSwing();
         IsShoot();
+        IsBurst();
     }
 
     IEnumerator BossPattern()
@@ -81,14 +83,14 @@ public class Boss : MonoBehaviour
     IEnumerator NextPattern()
     {
         beforePattern = nextPattern;
-        nextPattern = Random.Range(3, 4);
+        nextPattern = Random.Range(4, 5);
         if (beforePattern != nextPattern)
         {
             StartCoroutine(NextPattern());
         }
         else
         {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(3f);
             StartCoroutine(BossPattern());
         }
     }
@@ -186,9 +188,9 @@ public class Boss : MonoBehaviour
         laser[2].SetActive(true);
         yield return new WaitForSeconds(0.5f);
         laser[2].SetActive(false);
-        rightUp = true;
+        right = true;
         yield return new WaitForSeconds(1.5f);
-        rightUp = false;
+        right = false;
         hands[0].transform.position = new Vector2(18, -1);
 
         hands[1].transform.position =
@@ -199,9 +201,9 @@ public class Boss : MonoBehaviour
         laser[3].SetActive(true);
         yield return new WaitForSeconds(0.5f);
         laser[3].SetActive(false);
-        leftUp = true;
+        left = true;
         yield return new WaitForSeconds(1.5f);
-        leftUp = false;
+        left = false;
         hands[1].transform.position = new Vector2(-18, -1);
 
 
@@ -214,9 +216,9 @@ public class Boss : MonoBehaviour
         laser[2].SetActive(true);
         yield return new WaitForSeconds(0.5f);
         laser[2].SetActive(false);
-        rightUp = true;
+        right = true;
         yield return new WaitForSeconds(1.5f);
-        rightUp = false;
+        right = false;
         hands[0].transform.position = new Vector2(18, -1);
 
         hands[1].transform.position =
@@ -227,9 +229,9 @@ public class Boss : MonoBehaviour
         laser[3].SetActive(true);
         yield return new WaitForSeconds(0.5f);
         laser[3].SetActive(false);
-        leftUp = true;
+        left = true;
         yield return new WaitForSeconds(1.5f);
-        leftUp = false;
+        left = false;
         hands[1].transform.position = new Vector2(-18, -1);
 
         rightLook.enabled = true; leftLook.enabled = true;
@@ -242,20 +244,48 @@ public class Boss : MonoBehaviour
     }
     IEnumerator ShootPattern()
     {
-        isShoot = true; rightUp = true;
+        right = true;
+        for (int i = 0; i < 20;  i++)
+        {
+            isShoot = true;
+            yield return new WaitForSeconds(0.001f);
+            isShoot = false;
+            yield return new WaitForSeconds(0.05f);
+        }
+        right = false;
+        
+        left = true;
+        for (int i = 0; i < 20; i++)
+        {
+            isShoot = true;
+            yield return new WaitForSeconds(0.001f);
+            isShoot = false;
+            yield return new WaitForSeconds(0.05f);
+        }
+        left = false;
+        
         yield return new WaitForSeconds(1f);
-        rightUp = false; leftUp = true;
+        
+        right = true; left = true;
+        for (int i = 0; i < 20; i++)
+        {
+            isShoot = true;
+            yield return new WaitForSeconds(0.001f);
+            isShoot = false;
+            yield return new WaitForSeconds(0.05f);
+        }
+        right = false; left = false;
+        // 총알이 사라진 이후에 바로 다음 패턴이 시작되는 느낌이라 그걸 제거하기 위한 1초 기다림
         yield return new WaitForSeconds(1f);
-        leftUp = false;
-        yield return new WaitForSeconds(1f);
-        rightUp = true; leftUp = true;
-        yield return new WaitForSeconds(1f);
-        rightUp = false; leftUp = false;
         StartCoroutine(NextPattern());
     }
     IEnumerator BurstPattern()
     {
-        yield return null;
+        isBurst = true;
+        right = true; left=true;
+        yield return new WaitForSeconds(2f);
+        isBurst = false;
+        right = false; left = false;
         StartCoroutine(NextPattern());
     }
     IEnumerator SpawnPattern()
@@ -349,7 +379,7 @@ public class Boss : MonoBehaviour
                     );
         }
 
-        if (isSwing && rightUp)
+        if (isSwing && right)
         {
             hands[0].transform.position = 
                 Vector2.MoveTowards(
@@ -357,10 +387,10 @@ public class Boss : MonoBehaviour
                     new Vector2(
                         hands[0].transform.position.x-30, 
                         hands[0].transform.position.y),
-                    Time.deltaTime * 30);
+                    Time.deltaTime * 40);
         }
 
-        if (isSwing && leftUp)
+        if (isSwing && left)
         {
             hands[1].transform.position =
                 Vector2.MoveTowards(
@@ -368,13 +398,13 @@ public class Boss : MonoBehaviour
                     new Vector2(
                         hands[1].transform.position.x + 30,
                         hands[1].transform.position.y),
-                    Time.deltaTime * 30);
+                    Time.deltaTime * 40);
         }
     }
 
     void IsShoot()
     {
-        if (isShoot && rightUp)
+        if (isShoot && right)
         {
             enemyBullet = GameManager.Instance.poolManager.Get(2);
             enemyBullet.transform.position = hands[0].transform.position;
@@ -382,12 +412,27 @@ public class Boss : MonoBehaviour
 
         }
 
-        if (isShoot && leftUp)
+        if (isShoot && left)
         {
             enemyBullet = GameManager.Instance.poolManager.Get(2);
             enemyBullet.transform.position = hands[1].transform.position;
             enemyBullet.transform.eulerAngles = new Vector3(0, 0, -180 + hands[1].transform.rotation.eulerAngles.z);
+        }
+    }
 
+    void IsBurst()
+    {
+        if (isBurst && right)
+        {
+            enemyBullet = GameManager.Instance.poolManager.Get(2);
+            enemyBullet.transform.position = hands[0].transform.position;
+            enemyBullet.transform.eulerAngles = new Vector3(0, 0, 180 + hands[0].transform.rotation.eulerAngles.z);
+        }
+        if (isBurst && left)
+        {
+            enemyBullet = GameManager.Instance.poolManager.Get(2);
+            enemyBullet.transform.position = hands[1].transform.position;
+            enemyBullet.transform.eulerAngles = new Vector3(0, 0, 180 + hands[1].transform.rotation.eulerAngles.z);
         }
     }
 

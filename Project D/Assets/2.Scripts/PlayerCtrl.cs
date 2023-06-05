@@ -202,11 +202,12 @@ public class PlayerCtrl : MonoBehaviour
         endTimeReversal.gameObject.transform.localScale = Vector3.one * 3;
         // 플레이어의 이동하기 전 위치 리스트 내용을 모두 제거
         posList.Clear();
-        yield return new WaitForSeconds(1.5f);
-        // 플레이어 콜라이더 다시 활성화
-        gameObject.GetComponent<CircleCollider2D>().enabled = true;
+        yield return new WaitForSeconds(1f);
         // 플레이어의 이동 및 공격 다시 활성화
         action = true;
+        yield return new WaitForSeconds(1f);
+        // 플레이어 콜라이더 다시 활성화
+        gameObject.GetComponent<CircleCollider2D>().enabled = true;
 
         // 특수 능력 쿨타임 실행
         yield return new WaitForSeconds(3f);
