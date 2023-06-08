@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4729419422864184}
   - component: {fileID: 198240264361987454}
   - component: {fileID: 199071450011411642}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CFX3 Sparkles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4749,7 +4749,7 @@ GameObject:
   - component: {fileID: 4495328126112120}
   - component: {fileID: 198616579032010596}
   - component: {fileID: 199475972972846892}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CFX3 Electricity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9490,7 +9490,7 @@ GameObject:
   - component: {fileID: 114657699975798574}
   - component: {fileID: 1904027724070196633}
   - component: {fileID: 7604040506060053676}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CFX3_Hit_Electric_C_Air
   m_TagString: Effect
   m_Icon: {fileID: 0}
@@ -14492,7 +14492,7 @@ GameObject:
   - component: {fileID: 4335415297967450}
   - component: {fileID: 198359957661721904}
   - component: {fileID: 199480901624735346}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CFX3 Electricity Anim inward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19248,7 +19248,7 @@ GameObject:
   - component: {fileID: 4635416210929062}
   - component: {fileID: 198821592052895758}
   - component: {fileID: 199020907459637576}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CFX3 Electricity Anim outward
   m_TagString: Untagged
   m_Icon: {fileID: 0}

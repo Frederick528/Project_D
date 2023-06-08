@@ -7,12 +7,12 @@ using UnityEngine.UI;
 public class PlayerCtrl : MonoBehaviour
 {
     bool bulletCooldown, timeReversalCooldown;
-    public static int maxHealth = 5;
+    public static int maxHealth = 100;
     public static int health = maxHealth;
     public List<GameObject> effect;
     public Vector2 playerPos, mousePos, playerMovePos;
     float dis;
-    float bounceAngle;
+    public float bounceAngle, bounceSpeed;
     public float angle;
     bool action = true;
     List<Vector2> posList = new List<Vector2>();
@@ -45,7 +45,7 @@ public class PlayerCtrl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             // 쿨타임이 다 돌았을 경우
-            if (timeReversalCooldown == false)
+            if (timeReversalCooldown == false && posList.Count > 0)
             {
                 // 플레이어의 이동을 멈추고 능력 발동
                 rb2.velocity = Vector2.zero;
@@ -107,9 +107,10 @@ public class PlayerCtrl : MonoBehaviour
 
             // 플레이어 속도를 0으로 조정(플레이어 이동 중에 다시 우클릭을 할 경우, 예전 속도 때문에 이상한 방향으로 나가는 것을 방지)
             rb2.velocity = Vector2.zero;
+            // 충돌을 하지 않았을 경우 bounceSpeed =1, 충돌했을 경우 값이 변함.
+            bounceSpeed = 1;
             // 플레이어의 이동 벡터
-            playerMovePos = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-
+            playerMovePos = bounceSpeed * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             // moveCor(이동 코루틴)이 null이 아닐 경우(= 이동 코루틴이 작동하고 있을 경우)
             if (moveCor != null)
             {
@@ -196,42 +197,41 @@ public class PlayerCtrl : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
         
-        // 1.5초동안 특수 능력 마지막 이펙트 실행
+        // 특수 능력 마지막 이펙트 실행
         ParticleSystem endTimeReversal = Instantiate(effect[0], transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         // 특수 능력 마지막 이펙트의 크기 조절
         endTimeReversal.gameObject.transform.localScale = Vector3.one * 3;
         // 플레이어의 이동하기 전 위치 리스트 내용을 모두 제거
         posList.Clear();
-        yield return new WaitForSeconds(1f);
         // 플레이어의 이동 및 공격 다시 활성화
         action = true;
-        yield return new WaitForSeconds(1f);
         // 플레이어 콜라이더 다시 활성화
         gameObject.GetComponent<CircleCollider2D>().enabled = true;
 
         // 특수 능력 쿨타임 실행
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(4f);
         timeReversalCooldown = false;
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Object"))
         {
+            bounceSpeed = 0.3f;
             //오브젝트와 충돌할 경우에 플레이어 이동방향의 반대 방향으로 튕김
-            playerMovePos = -playerMovePos;
+            playerMovePos = -bounceSpeed * playerMovePos;
 
             //플레이어 기준 제1사분면 제2사분면일 경우
-            if (angle > 0)
+            if (bounceAngle > 0)
             {
                 //바운스앵글 조정 이유: 오브젝트와 충둘하여 튕겨져나간 후 그라운드와 충돌 시 플레이어가 튕겨져 나갈 각도를 정해줘야 하기 때문
-                bounceAngle = angle - Mathf.PI;
+                bounceAngle = -Mathf.PI + bounceAngle;
 
             }
 
             //플레이어 기준 제3사분면 제4사분면일 경우
-            if (angle < 0)
+            else if (bounceAngle < 0)
             {
-                bounceAngle = angle + Mathf.PI;
+                bounceAngle = Mathf.PI + bounceAngle;
 
             }
 
@@ -244,32 +244,33 @@ public class PlayerCtrl : MonoBehaviour
             if (collision.contacts[0].point[0] > playerPos.x + 0.1 || collision.contacts[0].point[0] < playerPos.x - 0.1)
             {
                 // 플레이어 이동 벡터는 튕겨져나가는 방향의 벡터로 변환함(그 방향으로 이동하게 됨)
-                playerMovePos = new Vector2(-Mathf.Cos(bounceAngle), Mathf.Sin(bounceAngle));
+                playerMovePos = bounceSpeed * new Vector2(-Mathf.Cos(bounceAngle), Mathf.Sin(bounceAngle));
 
                 // 충돌 후에 bounceAngle값 조정(충돌 후, 다른 그라운드와 충돌할 경우에 튕겨져나가는 방향을 다시 조정해줘야하기 때문)
-                // 충돌 후에 bounceAngle이 제2사분면을 가리킬 경우, bounceAngle이 제1사분면으로 바뀜
+                // 충돌 전에 bounceAngle이 제2사분면을 가리킬 경우, bounceAngle이 제1사분면으로 바뀜
                 if (bounceAngle > Mathf.PI / 2)
                     bounceAngle = Mathf.PI - bounceAngle;
-                // 충돌 후에 bounceAngle이 제1사분면을 가리킬 경우, bounceAngle이 제2사분면으로 바뀜
-                else if (bounceAngle < Mathf.PI / 2 || bounceAngle > 0)
+                // 충돌 전에 bounceAngle이 제1사분면을 가리킬 경우, bounceAngle이 제2사분면으로 바뀜
+                else if (bounceAngle < Mathf.PI / 2 && bounceAngle > 0)
                     bounceAngle = Mathf.PI / 2 + bounceAngle;
-                // 충돌 후에 bounceAngle이 제4사분면을 가리킬 경우, bounceAngle이 제3사분면으로 바뀜
-                else if (bounceAngle > -(Mathf.PI / 2) || bounceAngle < 0)
+                // 충돌 전에 bounceAngle이 제4사분면을 가리킬 경우, bounceAngle이 제3사분면으로 바뀜
+                else if (bounceAngle > -(Mathf.PI / 2) && bounceAngle < 0)
                     bounceAngle = -(Mathf.PI / 2) + bounceAngle;
-                // 충돌 후에 bounceAngle이 제3사분면을 가리킬 경우, bounceAngle이 제4사분면으로 바뀜
+
+                // 충돌 전에 bounceAngle이 제3사분면을 가리킬 경우, bounceAngle이 제4사분면으로 바뀜
                 else if (bounceAngle < -(Mathf.PI / 2))
-                    bounceAngle = Mathf.PI + bounceAngle;
+                    bounceAngle = -Mathf.PI - bounceAngle;
             }
 
             // 충돌 위치 y값에 대한 코드로 위 코드와 비슷함
             if (collision.contacts[0].point[1] > playerPos.y + 0.1 || collision.contacts[0].point[1] < playerPos.y - 0.1)
             {
-                playerMovePos = new Vector2(Mathf.Cos(bounceAngle), -Mathf.Sin(bounceAngle));
+                playerMovePos = bounceSpeed * new Vector2(Mathf.Cos(bounceAngle), -Mathf.Sin(bounceAngle));
                 if (bounceAngle > Mathf.PI / 2)
                     bounceAngle = -bounceAngle;
-                else if (bounceAngle < Mathf.PI / 2 || bounceAngle > 0)
+                else if (bounceAngle < Mathf.PI / 2 && bounceAngle > 0)
                     bounceAngle = -bounceAngle;
-                else if (bounceAngle > -(Mathf.PI / 2) || bounceAngle < 0)
+                else if (bounceAngle > -(Mathf.PI / 2) && bounceAngle < 0)
                     bounceAngle = -bounceAngle;
                 else if (bounceAngle < -(Mathf.PI / 2))
                     bounceAngle = -bounceAngle;

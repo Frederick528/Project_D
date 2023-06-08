@@ -5,13 +5,22 @@ using static UnityEngine.ParticleSystem;
 
 public class Boss : MonoBehaviour
 {
+    //이동 거리
+    float distance = 0.7f;
+    //이동 방향
+    float rightDirection = 1f;
+    float leftDirection = 1f;
+
     bool isLaser, isSwing, isShoot, isBurst, isSpawn = false;
     bool right, left, rightUp, rightDown, leftUp, leftDown, rightHandMove, leftHandMove = false;
-    bool rightHandBack, leftHandBack = false;
+    bool rightHandBack, leftHandBack, handMove = false;
+    bool rightBulletCooldown, leftBulletCooldown = false;
     GameObject enemyBullet;
     public GameObject target;
     public GameObject[] hands;
     public GameObject[] laser;
+
+    float addNum = 0;
     int nextPattern = 0;
     int beforePattern;
 
@@ -49,6 +58,7 @@ public class Boss : MonoBehaviour
             StopAllCoroutines();
             return;
         }
+        HandMove();
         HandBack();
         IsLaser();
         IsSwing();
@@ -82,15 +92,17 @@ public class Boss : MonoBehaviour
 
     IEnumerator NextPattern()
     {
+        handMove = true;
         beforePattern = nextPattern;
-        nextPattern = Random.Range(4, 5);
-        if (beforePattern != nextPattern)
+        nextPattern = Random.Range(1, 5);
+        if (beforePattern == nextPattern)
         {
             StartCoroutine(NextPattern());
         }
         else
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(4f);
+            handMove = false;
             StartCoroutine(BossPattern());
         }
     }
@@ -119,6 +131,7 @@ public class Boss : MonoBehaviour
         leftLook.enabled = false; leftDown = false; rightLook.enabled = true;
         // 오른손 레이저 비활성화
         laser[0].SetActive(false);
+        addNum = 0;
         // 왼손 레이저라인 활성화
         laser[3].SetActive(true);
         yield return new WaitForSeconds(0.5f);
@@ -134,6 +147,7 @@ public class Boss : MonoBehaviour
         rightLook.enabled = false; rightDown = false; leftLook.enabled = true;
         // 왼손 레이저 비활성화
         laser[1].SetActive(false);
+        addNum = 0;
         // 오른손 레이저라인 활성화
         laser[2].SetActive(true);
         yield return new WaitForSeconds(0.5f);
@@ -149,6 +163,7 @@ public class Boss : MonoBehaviour
         leftLook.enabled = false; leftUp = false; rightLook.enabled = true;
         // 오른손 레이저 비활성화
         laser[0].SetActive(false);
+        addNum = 0;
         // 왼손 레이저라인 활성화
         laser[3].SetActive(true);
         yield return new WaitForSeconds(0.5f);
@@ -161,6 +176,7 @@ public class Boss : MonoBehaviour
         yield return new WaitForSeconds(1f);
         // 왼손 레이저 비활성화
         laser[1].SetActive(false);
+        addNum = 0;
         // 왼손 lookat 멈춤
         leftLook.enabled = true;
         // 1초동안 왼손 원래 자리로 돌아가고 오른손 이동 멈춤
@@ -191,7 +207,7 @@ public class Boss : MonoBehaviour
         right = true;
         yield return new WaitForSeconds(1.5f);
         right = false;
-        hands[0].transform.position = new Vector2(18, -1);
+        hands[0].transform.position = new Vector2(30, -1);
 
         hands[1].transform.position =
            new Vector2(
@@ -219,7 +235,7 @@ public class Boss : MonoBehaviour
         right = true;
         yield return new WaitForSeconds(1.5f);
         right = false;
-        hands[0].transform.position = new Vector2(18, -1);
+        hands[0].transform.position = new Vector2(30, -1);
 
         hands[1].transform.position =
            new Vector2(
@@ -244,37 +260,25 @@ public class Boss : MonoBehaviour
     }
     IEnumerator ShootPattern()
     {
+        isShoot = true;
         right = true;
-        for (int i = 0; i < 20;  i++)
-        {
-            isShoot = true;
-            yield return new WaitForSeconds(0.001f);
-            isShoot = false;
-            yield return new WaitForSeconds(0.05f);
-        }
+        yield return new WaitForSeconds(2f);
         right = false;
-        
+
+        // 총알 쿨타임 코루틴이 동작하는 도중에 왼손에서 총을 쏠 경우, 쿨타임 코루틴이 제대로 작동하지 않기 때문에 1초 기다림
+        yield return new WaitForSeconds(1f);
+
         left = true;
-        for (int i = 0; i < 20; i++)
-        {
-            isShoot = true;
-            yield return new WaitForSeconds(0.001f);
-            isShoot = false;
-            yield return new WaitForSeconds(0.05f);
-        }
+        yield return new WaitForSeconds(2f);
         left = false;
         
         yield return new WaitForSeconds(1f);
         
         right = true; left = true;
-        for (int i = 0; i < 20; i++)
-        {
-            isShoot = true;
-            yield return new WaitForSeconds(0.001f);
-            isShoot = false;
-            yield return new WaitForSeconds(0.05f);
-        }
+        yield return new WaitForSeconds(2f);
         right = false; left = false;
+
+        isShoot = false;
         // 총알이 사라진 이후에 바로 다음 패턴이 시작되는 느낌이라 그걸 제거하기 위한 1초 기다림
         yield return new WaitForSeconds(1f);
         StartCoroutine(NextPattern());
@@ -282,16 +286,25 @@ public class Boss : MonoBehaviour
     IEnumerator BurstPattern()
     {
         isBurst = true;
-        right = true; left=true;
+        right = true; left = true;
         yield return new WaitForSeconds(2f);
-        isBurst = false;
         right = false; left = false;
+        isBurst = false;
+        addNum = 0;
         StartCoroutine(NextPattern());
     }
     IEnumerator SpawnPattern()
     {
         yield return null;
         StartCoroutine(NextPattern());
+    }
+
+    IEnumerator BulletCooldown(float cooldown)
+    {
+        // cooldown초동안 쿨타임 후, 총알 쿨타임 종료
+        yield return new WaitForSeconds(cooldown);
+        rightBulletCooldown = false;
+        leftBulletCooldown = false;
     }
 
     void IsLaser()
@@ -355,6 +368,29 @@ public class Boss : MonoBehaviour
                     Time.deltaTime
                     );
         }
+        
+        if (laser[0].activeSelf)
+        {
+            if (addNum < 3)
+            {
+                addNum += 0.05f;
+                laser[4].transform.localScale = new Vector3(addNum, 30, 1);
+            }
+            else
+                laser[4].transform.localScale = new Vector3(3, 30, 1);
+
+        }
+
+        if (laser[1].activeSelf)
+        {
+            if (addNum < 3)
+            {
+                addNum += 0.05f;
+                laser[5].transform.localScale = new Vector3(addNum, 30, 1);
+            }
+            else
+                laser[5].transform.localScale = new Vector3(3, 30, 1);
+        }
     }
 
     void IsSwing()
@@ -364,7 +400,7 @@ public class Boss : MonoBehaviour
             hands[0].transform.position =
                 Vector2.Lerp(
                     hands[0].transform.position,
-                    new Vector2(18, -1),
+                    new Vector2(30, -1),
                     Time.deltaTime
                     );
         }
@@ -385,7 +421,7 @@ public class Boss : MonoBehaviour
                 Vector2.MoveTowards(
                     hands[0].transform.position, 
                     new Vector2(
-                        hands[0].transform.position.x-30, 
+                        hands[0].transform.position.x-10, 
                         hands[0].transform.position.y),
                     Time.deltaTime * 40);
         }
@@ -396,7 +432,7 @@ public class Boss : MonoBehaviour
                 Vector2.MoveTowards(
                     hands[1].transform.position,
                     new Vector2(
-                        hands[1].transform.position.x + 30,
+                        hands[1].transform.position.x + 10,
                         hands[1].transform.position.y),
                     Time.deltaTime * 40);
         }
@@ -404,35 +440,49 @@ public class Boss : MonoBehaviour
 
     void IsShoot()
     {
-        if (isShoot && right)
+        if (isShoot && right && !rightBulletCooldown)
         {
             enemyBullet = GameManager.Instance.poolManager.Get(2);
             enemyBullet.transform.position = hands[0].transform.position;
             enemyBullet.transform.eulerAngles = new Vector3(0,0,180+hands[0].transform.rotation.eulerAngles.z);
+            rightBulletCooldown = true;
+            StartCoroutine(BulletCooldown(0.05f));
 
         }
 
-        if (isShoot && left)
+        if (isShoot && left && !leftBulletCooldown)
         {
             enemyBullet = GameManager.Instance.poolManager.Get(2);
             enemyBullet.transform.position = hands[1].transform.position;
             enemyBullet.transform.eulerAngles = new Vector3(0, 0, -180 + hands[1].transform.rotation.eulerAngles.z);
+            leftBulletCooldown = true;
+            StartCoroutine(BulletCooldown(0.05f));
         }
     }
 
     void IsBurst()
     {
-        if (isBurst && right)
+        // 총알이 쿨타임 상태가 아닐 경우 총알 발사 각도 증가
+        // 13씩 더하는 이유는 13이 360으로 떨어지지 않기 때문에 총알이 매번 다른 위치로 발사되기 때문.
+        if (isBurst && (!rightBulletCooldown || !leftBulletCooldown))
+            addNum += 13;
+
+        if (isBurst && right && !rightBulletCooldown)
         {
             enemyBullet = GameManager.Instance.poolManager.Get(2);
             enemyBullet.transform.position = hands[0].transform.position;
-            enemyBullet.transform.eulerAngles = new Vector3(0, 0, 180 + hands[0].transform.rotation.eulerAngles.z);
+            enemyBullet.transform.eulerAngles = new Vector3(0, 0, - addNum);
+            rightBulletCooldown = true;
+            StartCoroutine(BulletCooldown(0.02f));
         }
-        if (isBurst && left)
+
+        if (isBurst && left && !leftBulletCooldown)
         {
             enemyBullet = GameManager.Instance.poolManager.Get(2);
             enemyBullet.transform.position = hands[1].transform.position;
-            enemyBullet.transform.eulerAngles = new Vector3(0, 0, 180 + hands[1].transform.rotation.eulerAngles.z);
+            enemyBullet.transform.eulerAngles = new Vector3(0, 0, + addNum);
+            leftBulletCooldown = true;
+            StartCoroutine(BulletCooldown(0.02f));
         }
     }
 
@@ -458,4 +508,26 @@ public class Boss : MonoBehaviour
                     );
         }
     }
+
+    void HandMove()
+    {
+        if (handMove)
+        {
+            float rightHandMoveAmount = rightDirection * 0.6f * Time.deltaTime;
+            hands[0].transform.Translate(0f, rightHandMoveAmount, 0f, Space.World);
+            if (Mathf.Abs(hands[0].transform.position.y - rightHandStartPos.y) >= distance)
+            {
+                rightDirection *= -1f;
+            }
+
+            float leftHandMoveAmount = leftDirection * 0.6f * Time.deltaTime;
+            hands[1].transform.Translate(0f, leftHandMoveAmount, 0f, Space.World);
+            if (Mathf.Abs(hands[1].transform.position.y - leftHandStartPos.y) >= distance)
+            {
+                leftDirection *= -1f;
+            }
+
+        }
+    }
+
 }

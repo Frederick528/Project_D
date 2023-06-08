@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 11400000}
   - component: {fileID: 5078033565472802691}
   - component: {fileID: 2348437578087245596}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: CFX_ElectricityBall
   m_TagString: Effect
   m_Icon: {fileID: 0}
@@ -4849,7 +4849,7 @@ GameObject:
   - component: {fileID: 400002}
   - component: {fileID: 10800000}
   - component: {fileID: 11400002}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4960,7 +4960,7 @@ GameObject:
   - component: {fileID: 400004}
   - component: {fileID: 19800002}
   - component: {fileID: 19900002}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}

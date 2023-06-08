@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 [AddComponentMenu("")]
 public class UIScript : MonoBehaviour
@@ -9,13 +11,12 @@ public class UIScript : MonoBehaviour
 	[Header("Configuration")]
 	public Players numberOfPlayers = Players.OnePlayer;
 
-	public GameType gameType = GameType.Score;
+	public GameType gameType = GameType.Life;
 
 	// If the scoreToWin is -1, the game becomes endless (no win conditions, but you could do game over)
 	public int scoreToWin = 5;
 
-
-	[Header("References (don't touch)")]
+    [Header("References (don't touch)")]
 	//Right is used for the score in P1 games
 	public Text[] numberLabels = new Text[2];
 	public Text rightLabel, leftLabel;
@@ -23,7 +24,6 @@ public class UIScript : MonoBehaviour
 	public GameObject statsPanel, gameOverPanel, winPanel;
 	public Transform inventory;
 	public GameObject resourceItemPrefab;
-
 
 	// Internal variables to keep track of score, health, and resources, win state
 	private int[] scores = new int[2];
@@ -59,8 +59,8 @@ public class UIScript : MonoBehaviour
 		}
 	}
 
-	//version of the one below with one parameter to be able to connect UnityEvents
-	public void AddOnePoint(int playerNumber)
+    //version of the one below with one parameter to be able to connect UnityEvents
+    public void AddOnePoint(int playerNumber)
 	{
 		AddPoints(playerNumber, 1);
 	}

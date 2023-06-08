@@ -5,6 +5,7 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : Physics2DObject
 {
+	public static int enemyCount = 0;
     GameObject enemyBullet;
     bool isSearch = false;
 	// This is the target the object is going to move towards
@@ -62,7 +63,7 @@ public class Enemy : Physics2DObject
 
 		float distance = Vector3.Distance(target.transform.position, transform.position);
 
-		if (distance <= 13)
+		if (distance <= 15)
 			isSearch = true;
 		else
 			isSearch = false;
@@ -94,4 +95,9 @@ public class Enemy : Physics2DObject
 			speed = originSpeed;
 		}
 	}
+
+    private void OnDisable()
+    {
+		enemyCount += 1;
+    }
 }

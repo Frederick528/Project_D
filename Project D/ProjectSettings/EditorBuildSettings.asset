@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/1.Scenes/Lander1.unity
+    path: Assets/1.Scenes/1.Enemy.unity
     guid: 3925160d1efe749d5a026cbf18c60f83
   - enabled: 1
-    path: Assets/1.Scenes/Lander2.unity
+    path: Assets/1.Scenes/2.SafeZone.unity
+    guid: e70fd5f5db0846f48a5fa363e05f6fd0
+  - enabled: 1
+    path: Assets/1.Scenes/3.Boss.unity
     guid: 79679ab7ee2542f4ca0e073e734fa63c
   m_configObjects: {}
