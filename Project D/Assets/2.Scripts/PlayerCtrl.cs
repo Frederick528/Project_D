@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    bool bulletCooldown, timeReversalCooldown;
+    public bool bulletCooldown, timeReversalCooldown;
+    public int bulletLevel = 0;
     public static int maxHealth = 100;
     public static int health = maxHealth;
     public List<GameObject> effect;
@@ -14,7 +15,7 @@ public class PlayerCtrl : MonoBehaviour
     float dis;
     public float bounceAngle, bounceSpeed;
     public float angle;
-    bool action = true;
+    public bool action = true;
     List<Vector2> posList = new List<Vector2>();
     GameObject arrow, bullet;
     public float originSpeed;
@@ -150,23 +151,39 @@ public class PlayerCtrl : MonoBehaviour
         // 좌클릭 시
         if (Input.GetMouseButtonDown(0))
         {
-            // poolManager에서 총알을 소환
-            bullet = GameManager.Instance.poolManager.Get(1);
-            // 총알의 위치와 각도 설정
-            bullet.transform.position = playerPos;
-            bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
-            // 총알 쿨타임 시작 및 쿨타임 코루틴 실행
-            bulletCooldown = true;
-            StartCoroutine("BulletCooldown");
+            switch (bulletLevel)
+            {
+                case 0:
+                    // poolManager에서 총알을 소환
+                    bullet = GameManager.Instance.poolManager.Get(1);
+                    // 총알의 위치와 각도 설정
+                    bullet.transform.position = playerPos;
+                    bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
+                    // 총알 쿨타임 시작 및 쿨타임 코루틴 실행
+                    bulletCooldown = true;
+                    StartCoroutine(BulletCooldown(0.3f));
+                    break;
+                case 1:
+                    bullet = GameManager.Instance.poolManager.Get(1);
+                    // 총알의 위치와 각도 설정
+                    bullet.transform.position = playerPos;
+                    bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
+                    // 총알 쿨타임 시작 및 쿨타임 코루틴 실행
+                    bulletCooldown = true;
+                    StartCoroutine(BulletCooldown(0.1f));
+                    break;
+
+
+            }
 
         }
     }
 
     // (총알 쿨타임 코루틴)
-    IEnumerator BulletCooldown()
+    IEnumerator BulletCooldown(float cooldown)
     {
         // 0.3초동안 쿨타임 후, 총알 쿨타임 종료
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(cooldown);
         bulletCooldown = false;
     }
 

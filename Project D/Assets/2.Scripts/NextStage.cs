@@ -25,7 +25,7 @@ public class NextStage : MonoBehaviour
                 break;
             case 1:
                 Enemy.enemyCount = 0;
-                
+                open.SetActive(true);
                 break;
 
         }

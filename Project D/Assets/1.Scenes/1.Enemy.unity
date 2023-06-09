@@ -593,6 +593,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c3af384f822c204b9a30ae6624208bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletCooldown: 0
+  timeReversalCooldown: 0
   effect:
   - {fileID: 1628744458893394, guid: e243632bb3aff9549abdcfcc2ef0c4f0, type: 3}
   - {fileID: 100000, guid: 77ec3c4e07a36814fb3169ecef41b50a, type: 3}
@@ -602,9 +604,10 @@ MonoBehaviour:
   bounceAngle: 0
   bounceSpeed: 0
   angle: 0
+  action: 1
   originSpeed: 0
   speed: 1.5
-  disVal: 10
+  disVal: 15
   maxArrowX: 0.5
   maxArrowY: 1
 --- !u!58 &54414458
@@ -7550,7 +7553,7 @@ PrefabInstance:
     - target: {fileID: 1452860177695203962, guid: 06de22a8ad1df234aacc1d36ad76743e,
         type: 3}
       propertyPath: levelName
-      value: Lander2
+      value: 2.SafeZone
       objectReference: {fileID: 0}
     - target: {fileID: 3584399609999613933, guid: 06de22a8ad1df234aacc1d36ad76743e,
         type: 3}
