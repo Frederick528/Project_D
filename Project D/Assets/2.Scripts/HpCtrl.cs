@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class HpCtrl : MonoBehaviour
 {
+    public static int BulletDamage = 1;
     int health;
     public int maxHealth;
     public Slider hpBar;
@@ -24,7 +25,7 @@ public class HpCtrl : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Bullet"))
-            health -= 1;
+            health -= BulletDamage;
         if (collision.gameObject.CompareTag("Effect"))
             health -= 1;
     }

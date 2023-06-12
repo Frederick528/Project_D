@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public class PlayerCtrl : MonoBehaviour
 {
     public bool bulletCooldown, timeReversalCooldown;
-    public int bulletLevel = 0;
-    public static int maxHealth = 100;
+    public static int bulletLevel = 0;
+    public static int maxHealth = 10;
     public static int health = maxHealth;
     public List<GameObject> effect;
     public Vector2 playerPos, mousePos, playerMovePos;
@@ -164,15 +163,64 @@ public class PlayerCtrl : MonoBehaviour
                     StartCoroutine(BulletCooldown(0.3f));
                     break;
                 case 1:
-                    bullet = GameManager.Instance.poolManager.Get(1);
-                    // 총알의 위치와 각도 설정
-                    bullet.transform.position = playerPos;
-                    bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
+                    for (float i = -0.15f; i <= 0.15f; i += 0.3f)
+                    {
+                        // poolManager에서 총알을 소환
+                        bullet = GameManager.Instance.poolManager.Get(1);
+                        // 총알의 위치와 각도 설정
+                        bullet.transform.position = new Vector2(playerPos.x - i * Mathf.Sin(angle), playerPos.y + i * Mathf.Cos(angle));
+                        bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
+
+                    }
                     // 총알 쿨타임 시작 및 쿨타임 코루틴 실행
+                    bulletCooldown = true;
+                    StartCoroutine(BulletCooldown(0.3f));
+                    break;
+                case 2:
+                    for (float i = -0.15f; i <= 0.15f; i += 0.3f)
+                    {
+                        // poolManager에서 총알을 소환
+                        bullet = GameManager.Instance.poolManager.Get(1);
+
+                        bullet.transform.position = new Vector2(playerPos.x - i * Mathf.Sin(angle), playerPos.y + i * Mathf.Cos(angle));
+                        bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
+
+                    }
                     bulletCooldown = true;
                     StartCoroutine(BulletCooldown(0.1f));
                     break;
 
+                case 3:
+                    for (float i = -0.3f; i <= 0.3f; i += 0.3f)
+                    {
+                        // poolManager에서 총알을 소환
+                        bullet = GameManager.Instance.poolManager.Get(1);
+
+                        bullet.transform.position = new Vector2(playerPos.x - i * Mathf.Sin(angle), playerPos.y + i * Mathf.Cos(angle));
+                        bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
+
+                    }
+                    bulletCooldown = true;
+                    StartCoroutine(BulletCooldown(0.1f));
+                    break;
+
+                case 4: default:
+                    for (float i = -0.3f; i <= 0.3f; i += 0.3f)
+                    {
+                        // poolManager에서 총알을 소환
+                        bullet = GameManager.Instance.poolManager.Get(1);
+
+                        bullet.transform.position = new Vector2(playerPos.x - i * Mathf.Sin(angle), playerPos.y + i * Mathf.Cos(angle));
+                        bullet.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
+
+                        GameObject bullet2 = GameManager.Instance.poolManager.Get(1);
+                        bullet2.transform.position = new Vector2(playerPos.x - i * Mathf.Sin(angle) + 0.5f * (Mathf.Cos(angle)), playerPos.y + i * Mathf.Cos(angle) + 0.5f * (Mathf.Sin(angle)));
+                        bullet2.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle * Mathf.Rad2Deg - 90);
+
+                    }
+                    bulletCooldown = true;
+                    StartCoroutine(BulletCooldown(0.1f));
+                    break;
 
             }
 

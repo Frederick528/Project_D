@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class Upgrade : MonoBehaviour
 {
     private UIScript ui;
     public GameObject btn;
+    public TextMeshProUGUI[] upgradeLabels;
     public Slider hpBar;
     bool upgrade = false;
     // Start is called before the first frame update
@@ -18,6 +20,9 @@ public class Upgrade : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        SetText();
+        if (Input.GetKeyDown(KeyCode.Space))
+            upgrade = false;
         hpBar.value = (float)PlayerCtrl.health / PlayerCtrl.maxHealth;
     }
 
@@ -32,6 +37,32 @@ public class Upgrade : MonoBehaviour
         }
     }
 
+    void SetText()
+    {
+        switch (PlayerCtrl.bulletLevel)
+        {
+            case 0:
+                upgradeLabels[0].text = "Bullet + 1.";
+                break;
+            case 1:
+                upgradeLabels[0].text = "The reload speed of the bullet is increased.";
+                break;
+            case 2:
+                upgradeLabels[0].text = "Bullet + 1.";
+                break;
+            case 3:
+                upgradeLabels[0].text = "Fire the bullet twice.";
+                break;
+            case 4: default:
+                upgradeLabels[0].text = "It's Max level.";
+                break;
+
+        }
+
+        upgradeLabels[1].text = "Recover Health 15\n Maximum Health + 5";
+        upgradeLabels[2].text = "Bullet Damage + 1";
+    }
+
     public void OnClickExit()
     {
         PlayerMove();
@@ -39,7 +70,9 @@ public class Upgrade : MonoBehaviour
 
     public void OnClickBulletUpgrade()
     {
-        GameManager.Instance.playerCtrl.bulletLevel += 1;
+        if (PlayerCtrl.bulletLevel >= 4)
+            return;
+        PlayerCtrl.bulletLevel += 1;
         PlayerMove();
         upgrade = true;
     }
@@ -64,6 +97,7 @@ public class Upgrade : MonoBehaviour
 
     public void OnClickDamageUpgrade()
     {
+        HpCtrl.BulletDamage += 1;
         PlayerMove();
         upgrade = true;
     }

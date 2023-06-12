@@ -10,18 +10,20 @@ public class SetUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (UIScript.gameOver == true)
+            return;
         switch (SceneManager.GetActiveScene().buildIndex)
         {
-            case 0:
+            case 1:
                 goalText.text = "Eliminate 5 enemies (" + Enemy.enemyCount + " / 5)";
                 break;
-            case 1:
+            case 2: case 3: default:
                 goalText.text = "";
                 break;
         }

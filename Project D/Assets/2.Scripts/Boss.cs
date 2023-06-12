@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
+using UnityEngine.SceneManagement;
 
 public class Boss : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class Boss : MonoBehaviour
     float rightDirection = 1f;
     float leftDirection = 1f;
 
-    bool isLaser, isSwing, isShoot, isBurst, isSpawn = false;
+    bool isLaser, isSwing, isShoot, isBurst/*, isSpawn*/ = false;
     bool right, left, rightUp, rightDown, leftUp, leftDown, rightHandMove, leftHandMove = false;
     bool rightHandBack, leftHandBack, handMove = false;
     bool rightBulletCooldown, leftBulletCooldown = false;
@@ -33,10 +33,10 @@ public class Boss : MonoBehaviour
     public enum Pattern
     {
         Laser,
-        SPAWN,
         SHOOT,
         BURST,
         SWING
+        //SPAWN
     } 
     // Start is called before the first frame update
     void Start()
@@ -83,9 +83,9 @@ public class Boss : MonoBehaviour
             case 4:
                 StartCoroutine(BurstPattern());
                 break;
-            case 5:
-                StartCoroutine(SpawnPattern());
-                break;
+            //case 5:
+            //    StartCoroutine(SpawnPattern());
+            //    break;
 
         }
     }
@@ -293,11 +293,11 @@ public class Boss : MonoBehaviour
         addNum = 0;
         StartCoroutine(NextPattern());
     }
-    IEnumerator SpawnPattern()
-    {
-        yield return null;
-        StartCoroutine(NextPattern());
-    }
+    //IEnumerator SpawnPattern()
+    //{
+    //    yield return null;
+    //    StartCoroutine(NextPattern());
+    //}
 
     IEnumerator BulletCooldown(float cooldown)
     {
@@ -309,14 +309,6 @@ public class Boss : MonoBehaviour
 
     void IsLaser()
     {   
-        //우측 상단
-        //float randomRightAngle1 = Random.Range(Mathf.PI / 2, 0.0f);
-        //우측 하단
-        //float randomRightAngle2 = Random.Range(0.0f, -Mathf.PI / 2);
-        //좌측 상단
-        //float randomLeftAngle1 = Random.Range(Mathf.PI, Mathf.PI / 2);
-        //좌측 하단
-        //float randomLeftAngle2 = Random.Range(-Mathf.PI, -Mathf.PI / 2);
         if (isLaser && rightUp)
         {
             // 오른손이 플레이어 기준으로 우측상단으로 이동하는 코드
@@ -530,4 +522,8 @@ public class Boss : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        SceneManager.LoadScene("END");
+    }
 }

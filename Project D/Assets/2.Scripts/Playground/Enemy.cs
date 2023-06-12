@@ -63,7 +63,7 @@ public class Enemy : Physics2DObject
 
 		float distance = Vector3.Distance(target.transform.position, transform.position);
 
-		if (distance <= 15)
+		if (distance <= 20)
 			isSearch = true;
 		else
 			isSearch = false;
