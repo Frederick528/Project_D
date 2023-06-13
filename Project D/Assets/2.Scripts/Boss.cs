@@ -15,21 +15,30 @@ public class Boss : MonoBehaviour
     bool right, left, rightUp, rightDown, leftUp, leftDown, rightHandMove, leftHandMove = false;
     bool rightHandBack, leftHandBack, handMove = false;
     bool rightBulletCooldown, leftBulletCooldown = false;
+
+    bool berserkBoss = false;
+    bool berserkRight, berserkLeft, berserkRightUp, berserkRightDown, berserkLeftUp, berserkLeftDown, berserkRightHandMove, berserkLeftHandMove = false;
+    float berserkRightDirection = 1f;
+    float berserkLeftDirection = 1f;
+
     GameObject enemyBullet;
     public GameObject target;
     public GameObject[] hands;
     public GameObject[] laser;
 
+    // 레이저 크기 조정
     float addNum = 0;
     int nextPattern = 0;
     int beforePattern;
 
     Vector2 rightHandStartPos, leftHandStartPos;
 
+    Vector2 berserkRightHandStartPos, berserkLeftHandStartPos;
+
     float randomRightAngle1, randomRightAngle2, randomLeftAngle1, randomLeftAngle2;
 
-    BossHand rightLook;
-    BossHand leftLook;
+    BossHand rightLook, leftLook;
+    BossHand berserkRightLook, berserkLeftLook;
     public enum Pattern
     {
         Laser,
@@ -44,9 +53,14 @@ public class Boss : MonoBehaviour
         // 손 시작 위치 받아오기
         rightHandStartPos = hands[0].transform.position;
         leftHandStartPos = hands[1].transform.position;
+        berserkRightHandStartPos = hands[2].transform.position;
+        berserkLeftHandStartPos = hands[3].transform.position;
         // 손이 플레이어를 바라보는 스크립트
         rightLook = hands[0].gameObject.GetComponent<BossHand>();
         leftLook = hands[1].gameObject.GetComponent<BossHand>();
+        berserkRightLook = hands[2].gameObject.GetComponent<BossHand>();
+        berserkLeftLook = hands[3].gameObject.GetComponent<BossHand>();
+
         StartCoroutine(NextPattern());
     }
 
@@ -86,16 +100,38 @@ public class Boss : MonoBehaviour
             //case 5:
             //    StartCoroutine(SpawnPattern());
             //    break;
+            case 5:
+                StartCoroutine(BerserkLaserPattern());
+                break;
+            //case 6:
+            //    StartCoroutine(BerserkSwingPattern());
+            //    break;
+            //case 7:
+            //    StartCoroutine(BerserkShootPattern());
+            //    break;
+            //case 8:
+            //    StartCoroutine(BerserkBurstPattern());
+            //    break;
 
         }
     }
 
     IEnumerator NextPattern()
     {
+        if (GameManager.Instance.hpCtrl.health <= (/*0.5 * */GameManager.Instance.hpCtrl.maxHealth))
+        {
+            berserkBoss = true;
+            hands[2].SetActive(true);
+            hands[3].SetActive(true);
+        }
+
         handMove = true;
         beforePattern = nextPattern;
-        nextPattern = Random.Range(1, 5);
-        if (beforePattern == nextPattern)
+        if (berserkBoss)
+            nextPattern = Random.Range(5, 6);
+        else
+            nextPattern = Random.Range(1, 5);
+        if (beforePattern != nextPattern)
         {
             StartCoroutine(NextPattern());
         }
@@ -299,6 +335,137 @@ public class Boss : MonoBehaviour
     //    StartCoroutine(NextPattern());
     //}
 
+    IEnumerator BerserkLaserPattern()
+    {
+        // 레이저 실행
+        isLaser = true;
+        randomRightAngle1 = Random.Range(Mathf.PI / 2, 0.0f);
+        randomRightAngle2 = Random.Range(0.0f, -Mathf.PI / 2);
+
+        rightUp = true;
+        // 0.5초동안 오른손 이동
+
+        yield return new WaitForSeconds(0.5f);
+
+        rightLook.enabled = false; rightUp = false;
+
+        // 0.5초동안 광폭화 오른손 이동
+        berserkRightDown = true;
+        // 0.5초동안 오른손 레이저라인 온
+        laser[2].SetActive(true);
+
+        yield return new WaitForSeconds(0.5f);
+        
+        // 오른손 레이저라인 끄고 0.5초동안 오른손 레이저 온
+        laser[2].SetActive(false);
+        laser[0].SetActive(true);
+
+        berserkRightLook.enabled = false; berserkRightDown = false;
+        //0.5초동안 광폭화 오른손 레이저라인 온
+        laser[8].SetActive(true);
+
+        randomLeftAngle1 = Random.Range(Mathf.PI, Mathf.PI / 2);
+        randomLeftAngle2 = Random.Range(-Mathf.PI, -Mathf.PI / 2);
+        // 0.5초동안 왼손 이동
+        leftDown = true;
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 오른손 레이저 끄고 addNum = 0
+        laser[0].SetActive(false);
+        addNum = 0;
+        
+        leftLook.enabled = false; leftDown = false; rightLook.enabled = true;
+
+        // 광폭화 오른손 레이저라인 끄고 0.5초동안 광폭화 오른손 레이저 온
+        laser[8].SetActive(false);
+        laser[6].SetActive(true);
+        // 0.5초동안 왼손 레이저라인 온
+        laser[3].SetActive(true);
+        // 0.5초동안 광폭화 왼손 이동
+        berserkLeftUp = true;
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 광폭화 오른손 레이저 끄고 addNum = 0
+        laser[6].SetActive(false);
+        addNum = 0;
+
+        berserkLeftLook.enabled = false; berserkLeftUp = false; berserkRightLook.enabled = true;
+        
+        laser[3].SetActive(false);
+        // 0.5초동안 왼손 레이저 온
+        laser[1].SetActive(true);
+
+        // 여기서부터는 다시 위에 내용 반복시켜야 함(그게 편함 ㅋㅋ)
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 0.5초 후 레이저라인 비활성화 및 레이저 활성화
+        laser[3].SetActive(false);
+        laser[1].SetActive(true);
+
+        randomRightAngle2 = Random.Range(0.0f, -Mathf.PI / 2);
+        // 오른손이 1초동안 우측 하단으로 이동
+        rightDown = true;
+
+        yield return new WaitForSeconds(1f);
+
+        // 오른손 lookat 멈추고 오른손 이동 멈춤 + 왼손 lookat 활성화
+        rightLook.enabled = false; rightDown = false; leftLook.enabled = true;
+        // 왼손 레이저 비활성화
+        laser[1].SetActive(false);
+        addNum = 0;
+        // 오른손 레이저라인 활성화
+        laser[2].SetActive(true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 0.5초 후 레이저라인 비활성화 및 레이저 활성화
+        laser[2].SetActive(false);
+        laser[0].SetActive(true);
+
+        randomLeftAngle1 = Random.Range(Mathf.PI, Mathf.PI / 2);
+        // 왼손이 1초동안 좌측 상단으로 이동
+        leftUp = true;
+
+        yield return new WaitForSeconds(1f);
+
+        // 왼손 lookat 멈추고 왼손 이동 멈춤 + 오른손 lookat 활성화
+        leftLook.enabled = false; leftUp = false; rightLook.enabled = true;
+        // 오른손 레이저 비활성화
+        laser[0].SetActive(false);
+        addNum = 0;
+        // 왼손 레이저라인 활성화
+        laser[3].SetActive(true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        // 0.5초 후 레이저라인 비활성화 및 레이저 활성화
+        laser[3].SetActive(false);
+        laser[1].SetActive(true);
+
+        // 1초동안 오른손 원래 자리로 돌아가기
+        rightHandBack = true;
+
+        yield return new WaitForSeconds(1f);
+
+        // 왼손 레이저 비활성화
+        laser[1].SetActive(false);
+        addNum = 0;
+        // 왼손 lookat 멈춤
+        leftLook.enabled = true;
+        // 1초동안 왼손 원래 자리로 돌아가고 오른손 이동 멈춤
+        leftHandBack = true; rightHandBack = false;
+
+        yield return new WaitForSeconds(1f);
+
+        // 왼손 이동 멈춤
+        leftHandBack = false;
+        isLaser = false;
+        StartCoroutine(NextPattern());
+    }
+
     IEnumerator BulletCooldown(float cooldown)
     {
         // cooldown초동안 쿨타임 후, 총알 쿨타임 종료
@@ -322,7 +489,20 @@ public class Boss : MonoBehaviour
                     );
         }
 
-        if(isLaser && leftUp)
+        if (isLaser && berserkRightUp)
+        {
+            // 광폭화 오른손이 플레이어 기준으로 우측상단으로 이동하는 코드
+            hands[2].transform.position =
+                Vector2.Lerp(
+                    hands[2].transform.position,
+                    new Vector2(
+                        target.transform.position.x + 8 * Mathf.Cos(randomRightAngle1),
+                        target.transform.position.y + 8 * Mathf.Sin(randomRightAngle1)),
+                    Time.deltaTime
+                    );
+        }
+
+        if (isLaser && leftUp)
         {
             // 왼손이 플레이어 기준으로 좌측상단으로 이동하는 코드
             hands[1].transform.position =
@@ -341,6 +521,19 @@ public class Boss : MonoBehaviour
             hands[0].transform.position =
                 Vector2.Lerp(
                     hands[0].transform.position,
+                    new Vector2(
+                        target.transform.position.x + 8 * Mathf.Cos(randomRightAngle2),
+                        target.transform.position.y + 8 * Mathf.Sin(randomRightAngle2)),
+                    Time.deltaTime
+                    );
+        }
+
+        if (isLaser && berserkRightUp)
+        {
+            // 광폭화 오른손이 플레이어 기준으로 우측하단으로 이동하는 코드
+            hands[2].transform.position =
+                Vector2.Lerp(
+                    hands[2].transform.position,
                     new Vector2(
                         target.transform.position.x + 8 * Mathf.Cos(randomRightAngle2),
                         target.transform.position.y + 8 * Mathf.Sin(randomRightAngle2)),
@@ -517,6 +710,24 @@ public class Boss : MonoBehaviour
             if (Mathf.Abs(hands[1].transform.position.y - leftHandStartPos.y) >= distance)
             {
                 leftDirection *= -1f;
+            }
+
+            if (berserkBoss)
+            {
+                float berserkRightHandMoveAmount = berserkRightDirection * 0.6f * Time.deltaTime;
+                hands[2].transform.Translate(0f, berserkRightHandMoveAmount, 0f, Space.World);
+                if (Mathf.Abs(hands[2].transform.position.y - berserkRightHandStartPos.y) >= distance)
+                {
+                    berserkRightDirection *= -1f;
+                }
+
+                float berserkLeftHandMoveAmount = berserkLeftDirection * 0.6f * Time.deltaTime;
+                hands[3].transform.Translate(0f, berserkLeftHandMoveAmount, 0f, Space.World);
+                if (Mathf.Abs(hands[3].transform.position.y - berserkLeftHandStartPos.y) >= distance)
+                {
+                    berserkLeftDirection *= -1f;
+                }
+
             }
 
         }

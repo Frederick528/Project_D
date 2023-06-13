@@ -6,11 +6,11 @@ using UnityEngine.UI;
 public class HpCtrl : MonoBehaviour
 {
     public static int BulletDamage = 1;
-    int health;
+    public int health;
     public int maxHealth;
     public Slider hpBar;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         health = maxHealth;
     }
