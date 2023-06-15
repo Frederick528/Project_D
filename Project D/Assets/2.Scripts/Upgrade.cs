@@ -20,8 +20,6 @@ public class Upgrade : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            upgrade = false;
         hpBar.value = (float)PlayerCtrl.health / PlayerCtrl.maxHealth;
     }
 
@@ -59,8 +57,8 @@ public class Upgrade : MonoBehaviour
 
         }
 
-        upgradeLabels[1].text = "Recover Health 15\n Maximum Health + 5";
-        upgradeLabels[2].text = "Bullet Damage + 1";
+        upgradeLabels[1].text = "Recover Health 15\nMaximum Health + 5\nBullet Damage + 1";
+        upgradeLabels[2].text = "Bullet Damage + 4";
     }
 
     public void OnClickExit()
@@ -79,6 +77,7 @@ public class Upgrade : MonoBehaviour
 
     public void OnClickHealthUpgrade()
     {
+        HpCtrl.BulletDamage += 1;
         PlayerCtrl.maxHealth += 5;
         if (PlayerCtrl.health + 15 <= PlayerCtrl.maxHealth)
         {
@@ -97,7 +96,7 @@ public class Upgrade : MonoBehaviour
 
     public void OnClickDamageUpgrade()
     {
-        HpCtrl.BulletDamage += 1;
+        HpCtrl.BulletDamage += 4;
         PlayerMove();
         upgrade = true;
     }

@@ -284,7 +284,7 @@ public class PlayerCtrl : MonoBehaviour
         gameObject.GetComponent<CircleCollider2D>().enabled = true;
 
         // 특수 능력 쿨타임 실행
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(8f);
         timeReversalCooldown = false;
     }
     void OnCollisionEnter2D(Collision2D collision)

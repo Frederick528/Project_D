@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb970c45b40bb4652a8310660a03dfb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hpBar: {fileID: 3549317726595497845, guid: 3ae62bbcbe736b2419ac805588dbe043, type: 3}
+  hpBar: {fileID: 0}
 --- !u!114 &7734375707609702306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,7 +203,8 @@ MonoBehaviour:
   customActions:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11445676, guid: 0f6ae8712879c4f40bf6af3fe490badd, type: 3}
+      - m_Target: {fileID: 1964775906683065922, guid: bb16a2a98687f464c8bc6ef7d7f88a89,
+          type: 3}
         m_TargetAssemblyTypeName: UIScript, Assembly-CSharp
         m_MethodName: GameOver
         m_Mode: 3
