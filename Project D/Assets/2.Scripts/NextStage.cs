@@ -24,8 +24,6 @@ public class NextStage : MonoBehaviour
                 }
                 break;
             case 2:
-                // 다음 방으로 넘어갈 경우 적 처치 횟수 초기화
-                Enemy.enemyCount = 0;
                 open.SetActive(true);
                 break;
 

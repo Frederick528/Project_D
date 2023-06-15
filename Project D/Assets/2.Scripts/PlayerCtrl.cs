@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PlayerCtrl : MonoBehaviour
 {
     public bool bulletCooldown, timeReversalCooldown;
     public static int bulletLevel = 0;
     public static int maxHealth = 10;
     public static int health = maxHealth;
+    public static int startMaxHealth = maxHealth;
     public List<GameObject> effect;
     public Vector2 playerPos, mousePos, playerMovePos;
     float dis;
@@ -24,6 +24,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Start()
     {
+        Enemy.enemyCount = 0;
         rb2 = GetComponent<Rigidbody2D>();
     }
 
@@ -240,14 +241,19 @@ public class PlayerCtrl : MonoBehaviour
     {
         // 플레이어의 콜라이더를 끔(능력 중에는 플레이어가 충돌되지 않도록)
         gameObject.GetComponent<CircleCollider2D>().enabled = false;
+
         // 특수 능력 쿨타임 시작
         timeReversalCooldown = true;
+
         // 액션 = false(특수 능력 중에 플레이어의 이동 및 공격을 하지 못하도록 설정)
         action = false;
+
         // 화살표 비활성화(우클릭 누른 상태에서 특수 능력 사용할 경우, 화살표가 남는 버그 때문에 여기서도 따로 비활성화 해줘야 함.)
         arrow.SetActive(false);
+
         // 게임속도를 원래대로(위와 동일한 경우로 우클릭 누른 상태에서 사용하면 속도가 느려지는 버그를 없애기 위해 설정함)
         Time.timeScale = 1;
+
         // 1초 동안 특수 능력 시작 이펙트 소환
         Instantiate(effect[0], transform.position, Quaternion.identity);
         yield return new WaitForSeconds(1f);
@@ -264,12 +270,16 @@ public class PlayerCtrl : MonoBehaviour
         
         // 특수 능력 마지막 이펙트 실행
         ParticleSystem endTimeReversal = Instantiate(effect[0], transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+
         // 특수 능력 마지막 이펙트의 크기 조절
         endTimeReversal.gameObject.transform.localScale = Vector3.one * 3;
+
         // 플레이어의 이동하기 전 위치 리스트 내용을 모두 제거
         posList.Clear();
+
         // 플레이어의 이동 및 공격 다시 활성화
         action = true;
+
         // 플레이어 콜라이더 다시 활성화
         gameObject.GetComponent<CircleCollider2D>().enabled = true;
 
@@ -345,8 +355,9 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnDestroy()
     {
+        Time.timeScale = 1;
         if (arrow != null)
             arrow.SetActive(false);
-        Time.timeScale = 1;
     }
+
 }

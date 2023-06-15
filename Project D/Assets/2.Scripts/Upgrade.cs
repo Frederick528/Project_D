@@ -20,7 +20,6 @@ public class Upgrade : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetText();
         if (Input.GetKeyDown(KeyCode.Space))
             upgrade = false;
         hpBar.value = (float)PlayerCtrl.health / PlayerCtrl.maxHealth;
@@ -30,6 +29,7 @@ public class Upgrade : MonoBehaviour
     {
         if (collision.transform.CompareTag("Player") && upgrade == false)
         {
+            SetText();
             Time.timeScale = 0;
             GameManager.Instance.playerCtrl.action = false;
             GameManager.Instance.playerCtrl.timeReversalCooldown = true;

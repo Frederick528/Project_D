@@ -11,11 +11,11 @@ public class PoolManager : MonoBehaviour
 
     void Awake()
     {
-        pools = new List<GameObject>[prefabs.Length]; //프리펩에 있는 오브젝트 개수 pools에 담기
+        pools = new List<GameObject>[prefabs.Length]; //프리펩에 있는 오브젝트 개수만큼 pools에 담기
 
         for (int index = 0; index < pools.Length; index++)
         {
-            pools[index] = new List<GameObject>();  //pools에 있는 리스트값을 지우고 리스트만 남기기
+            pools[index] = new List<GameObject>();  //pools 리스트만 남기기
         }
 
     }

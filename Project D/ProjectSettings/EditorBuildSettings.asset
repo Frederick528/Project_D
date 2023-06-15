@@ -10,12 +10,36 @@ EditorBuildSettings:
     guid: 0d4104804c614ee4d91d63829144c981
   - enabled: 1
     path: Assets/1.Scenes/1.Enemy.unity
+    guid: b88f7b21081832d4486c32f10af1f687
+  - enabled: 1
+    path: Assets/1.Scenes/2.Enemy.unity
     guid: 3925160d1efe749d5a026cbf18c60f83
   - enabled: 1
-    path: Assets/1.Scenes/2.SafeZone.unity
+    path: Assets/1.Scenes/3.SafeZone.unity
     guid: e70fd5f5db0846f48a5fa363e05f6fd0
   - enabled: 1
-    path: Assets/1.Scenes/3.Boss.unity
+    path: Assets/1.Scenes/4.Enemy.unity
+    guid: 4b802174e5f001542a9fce28c9ffab27
+  - enabled: 1
+    path: Assets/1.Scenes/5.SafeZone(Object).unity
+    guid: d3485c1be950221438c638ff5815c891
+  - enabled: 1
+    path: Assets/1.Scenes/6.Enemy.unity
+    guid: ac2133c06cc021d4699a7a59978f19ab
+  - enabled: 1
+    path: Assets/1.Scenes/7.Enemy.unity
+    guid: 0f3e115dbf76d9d49bf074087905f0ff
+  - enabled: 1
+    path: Assets/1.Scenes/8.SafeZone.unity
+    guid: 2e0c0af90df99a746853b4d3ab822212
+  - enabled: 1
+    path: Assets/1.Scenes/9.Enemy.unity
+    guid: 6a9d7aeb06065d242b808fa632651cc9
+  - enabled: 1
+    path: Assets/1.Scenes/10.SafeZone.unity
+    guid: bad6d68a271a2704a9da90c08462b7c8
+  - enabled: 1
+    path: Assets/1.Scenes/11.Boss.unity
     guid: 79679ab7ee2542f4ca0e073e734fa63c
   - enabled: 1
     path: Assets/1.Scenes/END.unity

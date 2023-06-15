@@ -346,7 +346,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18379b6cc21482047b26a46bdd8c502a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
+  health: 0
+  maxHealth: 5
   hpBar: {fileID: 498555460039494111}
 --- !u!114 &4011172514248324778
 MonoBehaviour:
@@ -361,7 +362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody2D: {fileID: 0}
-  target: {fileID: 0}
+  target: {fileID: 7734375707609702239, guid: 6cf1a47fb88ce6b4c94098b331a60089, type: 3}
   speed: 2
   lookAtTarget: 1
   useSide: 0
