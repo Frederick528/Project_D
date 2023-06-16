@@ -21,7 +21,7 @@ public class SetUI : MonoBehaviour
         switch (SceneManager.GetActiveScene().buildIndex)
         {
             case 1:
-                goalText.text = "Eliminate 1 enemies (" + Enemy.enemyCount + " / 1)\nAttack with the left click!";
+                goalText.text = "Eliminate 1 enemies (" + Enemy.enemyCount + " / 1)\nRight click and drag to move! / Attack with the left click!";
                 break;
             case 2:
                 goalText.text = "Eliminate 2 enemies (" + Enemy.enemyCount + " / 2)\nTry using the skill by pressing the shift key! (Move to use)";
@@ -49,7 +49,7 @@ public class SetUI : MonoBehaviour
                 goalText.text = "Eliminate 15 enemies (" + Enemy.enemyCount + " / 15)";
                 break;
             case 10:
-                goalText.text = "Umm...";
+                goalText.text = "Umm...Boss..?";
                 break;
         }
     }

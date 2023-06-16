@@ -58,7 +58,7 @@ public class Upgrade : MonoBehaviour
         }
 
         upgradeLabels[1].text = "Recover Health 15\nMaximum Health + 5\nBullet Damage + 1";
-        upgradeLabels[2].text = "Bullet Damage + 4";
+        upgradeLabels[2].text = "Bullet Damage + 2";
     }
 
     public void OnClickExit()
@@ -96,7 +96,7 @@ public class Upgrade : MonoBehaviour
 
     public void OnClickDamageUpgrade()
     {
-        HpCtrl.BulletDamage += 4;
+        HpCtrl.BulletDamage += 2;
         PlayerMove();
         upgrade = true;
     }
