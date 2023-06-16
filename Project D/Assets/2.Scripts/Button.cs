@@ -24,7 +24,7 @@ public class Button : MonoBehaviour
 
     public void OnClickTitle()
     {
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene(0);
     }
 
     public void OnClickExit()
