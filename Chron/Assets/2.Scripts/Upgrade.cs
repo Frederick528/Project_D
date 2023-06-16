@@ -17,12 +17,6 @@ public class Upgrade : MonoBehaviour
         ui = GameObject.FindObjectOfType<UIScript>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        hpBar.value = (float)PlayerCtrl.health / PlayerCtrl.maxHealth;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.CompareTag("Player") && upgrade == false)
@@ -90,6 +84,7 @@ public class Upgrade : MonoBehaviour
             ui.SetHealth(PlayerCtrl.health, 0);
         }
 
+        hpBar.value = (float)PlayerCtrl.health / PlayerCtrl.maxHealth;
         PlayerMove();
         upgrade = true;
     }

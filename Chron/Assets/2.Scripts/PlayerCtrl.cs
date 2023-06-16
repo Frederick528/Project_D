@@ -355,6 +355,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void OnDestroy()
     {
+        // 방 이동할 때마다 생길 수 있는 버그 제거용
         Time.timeScale = 1;
         if (arrow != null)
             arrow.SetActive(false);
